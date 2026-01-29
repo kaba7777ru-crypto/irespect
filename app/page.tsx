@@ -1,53 +1,80 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import BusinessCard from './components/ui/BusinessCard';
 import DecisionCenter from './components/ui/DecisionCenterReal';
 import WeeklyGoals from './components/ui/WeeklyGoals';
 import ActivityFeed from './components/ui/ActivityFeedReal';
 import TimeInvestment from './components/ui/TimeInvestment';
 import { motion } from 'framer-motion';
-import { Sparkles, TrendingUp, Target } from 'lucide-react';
+import { Sparkles, TrendingUp, Target, Loader2 } from 'lucide-react';
+import { Business, getBusinesses, getAIAgents } from './lib/supabase';
 
-const businesses = [
-  {
-    name: 'irespect',
-    description: 'Маркетплейс услуг',
-    icon: '💼',
-    progress: 80,
-    revenue: '€20,000/мес',
-    status: 'launched' as const,
-    href: '/business/irespect',
-    gradient: 'bg-gradient-to-br from-[#007AFF] to-[#0051D5]',
-  },
-  {
-    name: 'Ritual-Service24',
-    description: 'Похоронные услуги + AI психолог',
-    icon: '🕊️',
-    progress: 45,
-    revenue: '€10,000/мес',
-    status: 'planning' as const,
-    href: '/business/ritual',
-    gradient: 'bg-gradient-to-br from-[#AF52DE] to-[#8E44AD]',
-  },
-  {
-    name: 'AIRES',
-    description: 'Мобильный каталог могил',
-    icon: '📱',
-    progress: 20,
-    revenue: '€1,000/мес',
-    status: 'planning' as const,
-    href: '/business/memorial',
-    gradient: 'bg-gradient-to-br from-[#34C759] to-[#28A745]',
-  },
-];
+const businessIcons: Record<string, string> = {
+  'irespect': '💼',
+  'Ritual-Service24': '🕊️',
+  'AIRES': '📱',
+};
 
-const stats = [
-  { label: 'Общий доход', value: '€31К', icon: TrendingUp, change: '+24%' },
-  { label: 'Активные проекты', value: '3', icon: Target, change: '100%' },
-  { label: 'AI агенты', value: '10', icon: Sparkles, change: 'Активно' },
-];
+const businessGradients: Record<string, string> = {
+  'irespect': 'bg-gradient-to-br from-[#007AFF] to-[#0051D5]',
+  'Ritual-Service24': 'bg-gradient-to-br from-[#AF52DE] to-[#8E44AD]',
+  'AIRES': 'bg-gradient-to-br from-[#34C759] to-[#28A745]',
+};
+
+const businessHrefs: Record<string, string> = {
+  'irespect': '/business/irespect',
+  'Ritual-Service24': '/business/ritual',
+  'AIRES': '/business/memorial',
+};
 
 export default function Home() {
+  const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [agentCount, setAgentCount] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadData();
+  }, []);
+
+  const loadData = async () => {
+    try {
+      const [businessData, agentData] = await Promise.all([
+        getBusinesses(),
+        getAIAgents(),
+      ]);
+      setBusinesses(businessData);
+      setAgentCount(agentData.filter(a => a.status === 'active').length);
+    } catch (error) {
+      console.error('Error loading data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const totalRevenue = businesses.reduce((sum, b) => sum + Number(b.revenue_monthly), 0);
+  const totalUsers = businesses.reduce((sum, b) => sum + b.users_count, 0);
+
+  const stats = [
+    {
+      label: 'Общий доход',
+      value: `€${(totalRevenue / 1000).toFixed(0)}К`,
+      icon: TrendingUp,
+      change: '+24%'
+    },
+    {
+      label: 'Активные проекты',
+      value: String(businesses.length),
+      icon: Target,
+      change: '100%'
+    },
+    {
+      label: 'AI агенты',
+      value: String(agentCount),
+      icon: Sparkles,
+      change: 'Активно'
+    },
+  ];
   return (
     <div className="max-w-7xl mx-auto">
       {/* Header */}
@@ -103,18 +130,36 @@ export default function Home() {
       {/* Business Cards */}
       <div className="mb-8">
         <h2 className="text-2xl font-bold text-[#1D1D1F] dark:text-[#F5F5F7] mb-6">Ваши бизнесы</h2>
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {businesses.map((business, index) => (
-            <motion.div
-              key={business.name}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-            >
-              <BusinessCard {...business} />
-            </motion.div>
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex items-center justify-center py-12">
+            <Loader2 className="animate-spin text-[#007AFF]" size={48} />
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {businesses.map((business, index) => {
+              const progress = business.status === 'launched' ? 80 : business.status === 'planning' ? 45 : 20;
+              return (
+                <motion.div
+                  key={business.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
+                >
+                  <BusinessCard
+                    name={business.name}
+                    description={business.description || ''}
+                    icon={businessIcons[business.name] || '📊'}
+                    progress={progress}
+                    revenue={`€${(business.revenue_monthly / 1000).toFixed(0)}K/мес`}
+                    status={business.status}
+                    href={businessHrefs[business.name] || '/'}
+                    gradient={businessGradients[business.name] || 'bg-gradient-to-br from-[#007AFF] to-[#0051D5]'}
+                  />
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
       {/* Activity & Time Grid */}
