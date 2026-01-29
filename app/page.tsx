@@ -52,16 +52,9 @@ export default function Home() {
     }
   };
 
-  const totalRevenue = businesses.reduce((sum, b) => sum + Number(b.revenue_monthly), 0);
   const totalUsers = businesses.reduce((sum, b) => sum + b.users_count, 0);
 
   const stats = [
-    {
-      label: 'Общий доход',
-      value: `€${(totalRevenue / 1000).toFixed(0)}К`,
-      icon: TrendingUp,
-      change: '+24%'
-    },
     {
       label: 'Активные проекты',
       value: String(businesses.length),
@@ -73,6 +66,12 @@ export default function Home() {
       value: String(agentCount),
       icon: Sparkles,
       change: 'Активно'
+    },
+    {
+      label: 'Пользователи',
+      value: String(totalUsers),
+      icon: TrendingUp,
+      change: '+15%'
     },
   ];
   return (
@@ -150,7 +149,7 @@ export default function Home() {
                     description={business.description || ''}
                     icon={businessIcons[business.name] || '📊'}
                     progress={progress}
-                    revenue={`€${(business.revenue_monthly / 1000).toFixed(0)}K/мес`}
+                    revenue=""
                     status={business.status}
                     href={businessHrefs[business.name] || '/'}
                     gradient={businessGradients[business.name] || 'bg-gradient-to-br from-[#007AFF] to-[#0051D5]'}
