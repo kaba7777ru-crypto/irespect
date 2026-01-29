@@ -12,7 +12,6 @@ export async function GET(
     const { id } = await context.params;
     const agentId = id;
 
-    // В продакшене получайте из базы данных
     const mockAgent = {
       id: agentId,
       name: 'Sample Agent',
@@ -50,8 +49,6 @@ export async function PATCH(
     const { id } = await context.params;
     const agentId = id;
     const body = await request.json();
-
-    // В продакшене обновите в базе данных
 
     return NextResponse.json({
       success: true,
