@@ -16,9 +16,9 @@ interface BusinessCardProps {
 }
 
 const statusConfig = {
-  planning: { color: 'bg-orange-500', text: 'Planning' },
-  launched: { color: 'bg-green-500', text: 'Launched' },
-  scaling: { color: 'bg-blue-500', text: 'Scaling' },
+  planning: { color: 'bg-orange-500', text: 'В планах' },
+  launched: { color: 'bg-green-500', text: 'Запущен' },
+  scaling: { color: 'bg-blue-500', text: 'Масштабирование' },
 };
 
 export default function BusinessCard({
@@ -66,7 +66,7 @@ export default function BusinessCard({
         {/* Progress Bar */}
         <div className="mb-6">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-sm font-medium text-[#86868B] dark:text-[#98989D]">Progress</span>
+            <span className="text-sm font-medium text-[#86868B] dark:text-[#98989D]">Прогресс</span>
             <span className="text-sm font-bold text-[#1D1D1F] dark:text-[#F5F5F7]">{progress}%</span>
           </div>
           <div className="h-2 bg-[#F5F5F7] dark:bg-[#2C2C2E] rounded-full overflow-hidden">
@@ -82,7 +82,7 @@ export default function BusinessCard({
         {/* Metrics */}
         <div className="flex items-center justify-between">
           <div>
-            <p className="text-sm text-[#86868B] dark:text-[#98989D] mb-1">Revenue</p>
+            <p className="text-sm text-[#86868B] dark:text-[#98989D] mb-1">Доход</p>
             <div className="flex items-center gap-2">
               <p className="text-2xl font-bold text-[#1D1D1F] dark:text-[#F5F5F7]">{revenue}</p>
               <TrendingUp size={16} className="text-[#34C759]" />

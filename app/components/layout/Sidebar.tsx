@@ -6,18 +6,18 @@ import { Home, Briefcase, Cross, Smartphone, BarChart3, DollarSign, Bot, FileTex
 import { motion } from 'framer-motion';
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: Home },
-  { name: 'iRespect', href: '/business/irespect', icon: Briefcase },
+  { name: 'Главная', href: '/', icon: Home },
+  { name: 'irespect', href: '/business/irespect', icon: Briefcase },
   { name: 'Ritual-Service24', href: '/business/ritual', icon: Cross },
-  { name: 'Memorial App', href: '/business/memorial', icon: Smartphone },
+  { name: 'AIRES', href: '/business/memorial', icon: Smartphone },
 ];
 
 const secondary = [
-  { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-  { name: 'Financials', href: '/financials', icon: DollarSign },
-  { name: 'AI Agents', href: '/agents', icon: Bot },
-  { name: 'Documents', href: '/documents', icon: FileText },
-  { name: 'Settings', href: '/settings', icon: Settings },
+  { name: 'Аналитика', href: '/analytics', icon: BarChart3 },
+  { name: 'Финансы', href: '/financials', icon: DollarSign },
+  { name: 'AI Агенты', href: '/agents', icon: Bot },
+  { name: 'Документы', href: '/documents', icon: FileText },
+  { name: 'Настройки', href: '/settings', icon: Settings },
 ];
 
 export default function Sidebar() {
@@ -33,9 +33,9 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="p-6 border-b border-[#D2D2D7] dark:border-[#38383A]">
         <h1 className="text-2xl font-bold bg-gradient-to-r from-[#007AFF] to-[#AF52DE] bg-clip-text text-transparent">
-          AI Business
+          AI Бизнес
         </h1>
-        <p className="text-sm text-[#86868B] dark:text-[#98989D] mt-1">Ecosystem Dashboard</p>
+        <p className="text-sm text-[#86868B] dark:text-[#98989D] mt-1">Дашборд экосистемы</p>
       </div>
 
       {/* Main Navigation */}
@@ -97,13 +97,25 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="p-4 border-t border-[#D2D2D7] dark:border-[#38383A]">
-        <div className="flex items-center gap-3 px-2">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#007AFF] to-[#AF52DE] flex items-center justify-center text-white font-semibold">
-            VK
+        <div className="px-2">
+          <p className="text-xs text-[#86868B] dark:text-[#98989D] mb-3 font-medium">Основатели</p>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#007AFF] to-[#0051D5] flex items-center justify-center text-white text-xs font-semibold">
+              Р
+            </div>
+            <p className="text-sm font-medium text-[#1D1D1F] dark:text-[#F5F5F7]">Рудольф</p>
           </div>
-          <div className="flex-1">
-            <p className="text-sm font-medium text-[#1D1D1F] dark:text-[#F5F5F7]">Viktor</p>
-            <p className="text-xs text-[#86868B] dark:text-[#98989D]">Founder</p>
+          <div className="flex items-center gap-2 mb-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#34C759] to-[#28A745] flex items-center justify-center text-white text-xs font-semibold">
+              Ж
+            </div>
+            <p className="text-sm font-medium text-[#1D1D1F] dark:text-[#F5F5F7]">Женя</p>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#AF52DE] to-[#8E44AD] flex items-center justify-center text-white text-xs font-semibold">
+              В
+            </div>
+            <p className="text-sm font-medium text-[#1D1D1F] dark:text-[#F5F5F7]">Витя</p>
           </div>
         </div>
       </div>
