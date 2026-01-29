@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import BusinessCard from './components/ui/BusinessCard';
+import BrandedBusinessCard from './components/BrandedBusinessCard';
 import DecisionCenter from './components/ui/DecisionCenterReal';
 import WeeklyGoals from './components/ui/WeeklyGoals';
 import ActivityFeed from './components/ui/ActivityFeedReal';
@@ -9,24 +9,7 @@ import TimeInvestment from './components/ui/TimeInvestment';
 import { motion } from 'framer-motion';
 import { Sparkles, TrendingUp, Target, Loader2 } from 'lucide-react';
 import { Business, getBusinesses, getAIAgents } from './lib/supabase';
-
-const businessIcons: Record<string, string> = {
-  'irespect': '💼',
-  'Ritual-Service24': '🕊️',
-  'AIRES': '📱',
-};
-
-const businessGradients: Record<string, string> = {
-  'irespect': 'bg-gradient-to-br from-[#007AFF] to-[#0051D5]',
-  'Ritual-Service24': 'bg-gradient-to-br from-[#AF52DE] to-[#8E44AD]',
-  'AIRES': 'bg-gradient-to-br from-[#34C759] to-[#28A745]',
-};
-
-const businessHrefs: Record<string, string> = {
-  'irespect': '/business/irespect',
-  'Ritual-Service24': '/business/ritual',
-  'AIRES': '/business/memorial',
-};
+import { type BusinessId } from './styles/brand-colors';
 
 export default function Home() {
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -136,7 +119,16 @@ export default function Home() {
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
             {businesses.map((business, index) => {
-              const progress = business.status === 'launched' ? 80 : business.status === 'planning' ? 45 : 20;
+              // Преобразуем название бизнеса в BusinessId
+              let businessId: BusinessId = 'irespect';
+              if (business.name.toLowerCase().includes('ritual')) {
+                businessId = 'ritual';
+              } else if (business.name.toLowerCase().includes('aires')) {
+                businessId = 'aires';
+              }
+
+              const growth = business.status === 'launched' ? 15 : business.status === 'planning' ? 0 : 5;
+
               return (
                 <motion.div
                   key={business.id}
@@ -144,15 +136,15 @@ export default function Home() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                 >
-                  <BusinessCard
-                    name={business.name}
-                    description={business.description || ''}
-                    icon={businessIcons[business.name] || '📊'}
-                    progress={progress}
-                    revenue=""
+                  <BrandedBusinessCard
+                    businessId={businessId}
+                    revenue={business.revenue_monthly || 0}
+                    users={business.users_count}
+                    growth={growth}
                     status={business.status}
-                    href={businessHrefs[business.name] || '/'}
-                    gradient={businessGradients[business.name] || 'bg-gradient-to-br from-[#007AFF] to-[#0051D5]'}
+                    onClick={() => {
+                      window.location.href = `/business/${businessId}`;
+                    }}
                   />
                 </motion.div>
               );
