@@ -5,12 +5,17 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY,
 });
 
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
-    const agentId = params.id;
+    const { id } = await context.params;
+    const agentId = id;
     const { task, priority = 'medium' } = await request.json();
 
     if (!task) {
