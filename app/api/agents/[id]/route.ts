@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
-    const agentId = params.id;
+    const { id } = await context.params;
+    const agentId = id;
 
-    // В продакшене получайте из базы данных
     const mockAgent = {
       id: agentId,
       name: 'Sample Agent',
@@ -39,13 +43,12 @@ export async function GET(
 
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
-    const agentId = params.id;
+    const { id } = await context.params;
+    const agentId = id;
     const body = await request.json();
-
-    // В продакшене обновите в базе данных
 
     return NextResponse.json({
       success: true,
@@ -61,12 +64,11 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: RouteContext
 ) {
   try {
-    const agentId = params.id;
-
-    // В продакшене удалите из базы данных
+    const { id } = await context.params;
+    const agentId = id;
 
     return NextResponse.json({
       success: true,
